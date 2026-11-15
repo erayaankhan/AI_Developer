@@ -1,0 +1,15 @@
+# Personal credentials for the dev-ticket scripts — never commit.
+credentials.env
+
+# Per-person settings (machine-specific paths) — never commit.
+python_scripts/dev_ticket.config.local.json
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Per-developer URLs, service paths and test-DB allow-list — never commit.
+local_env.env
+
+# macOS
+.DS_Store

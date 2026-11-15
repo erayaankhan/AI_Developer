@@ -1,0 +1,253 @@
+{
+  "profile_version": 1,
+  "_comment": "Launchpad team profile. Selected by \"profile\": \"launchpad\" in dev_ticket.config.local.json (or DEV_TICKET_PROFILE). Merged over dev_ticket.config.json; the repo overlay under repos.<key>.config is merged for the code repo Claude runs in. Skill notes: skills/dev-ticket/PROFILE_LAUNCHPAD.md.",
+
+  "assembla_space": "Launchpad",
+  "current_milestones": ["Release 4.20.0"],
+  "pick_from_queue": true,
+
+  "project_root": "auto",
+  "base_branch": "master",
+  "branch_prefix": "FB_",
+
+  "statuses": {
+    "queue": "Dev Queue",
+    "in_process": "Dev in Process",
+    "dev_done": "Dev Done",
+    "code_review": "Dev Code Review",
+    "missing_details": "Req Questions",
+    "done": "Dev Done",
+    "approved": "DevOps Staging",
+    "rejected": "Dev in Process",
+    "staging": "DevOps Staging",
+    "staging_review": "Dev Review Staging",
+    "qa": "QA Queue Staging"
+  },
+
+  "allowed_status_moves": [
+    ["Dev in Process", "Dev Code Review"],
+    ["Dev in Process", "Dev Done"],
+    ["Dev Done", "Dev Code Review"],
+    ["Dev in Process", "Req Questions"],
+    ["Dev Queue", "Req Questions"],
+    ["Req Questions", "Dev in Process"],
+    ["Req Questions", "Dev Queue"],
+    ["Dev in Process", "Dev Queue"],
+    ["Dev Queue", "Dev in Process"]
+  ],
+  "requested_status_moves": [],
+  "low_path_status_moves": [],
+  "push_required_targets": ["Dev Done", "Dev Code Review", "DevOps Staging"],
+
+  "reviewers": ["shamshadk", "vickyg"],
+  "developers": ["kinjons"],
+  "allow_self_review": true,
+  "teams": {"enabled": true, "env_key": "TEAMS_WEBHOOK_URL_LAUNCHPAD"},
+  "quality": {"enabled": true, "sonar_host": "https://sonarqube1-plasmacomp.c2minternal.com",
+              "bounce": {"enabled": true, "failed_statuses": ["Build Failed"],
+                         "merge_jobs": ["Code_Merge_Launchpad_CMGMT", "Code_Merge_Launchpad_MAIDC", "Code_Merge_Launchpad"],
+                         "app_jobs": {}},
+              "_comment": "Jenkins (jenkins-build-server-3, JENKINS_REMOTE_*): each app job runs Sonar (its gate fails on any new issue); some also run snyk test --severity-threshold=medium. Locally only High/Medium Sonar issues on changed lines block (team decision 2026-11-11). Apps per repo below."},
+  "reviewer_status_moves": [
+    ["Dev Code Review", "DevOps Staging"],
+    ["Dev Code Review", "Dev in Process"],
+    ["DevOps Staging", "Dev Code Review"],
+    ["Dev Review Staging", "QA Queue Staging"]
+  ],
+
+  "staging_deploy": {
+    "enabled": false,
+    "done_status": "Dev Review Staging",
+    "merged_status": "Staging Code Merged",
+    "failed_statuses": ["Merge Failed", "Build Failed"],
+    "app_folders": [],
+    "after_approval_note": "Launchpad: the ticket is in DevOps Staging. The Jenkins deploy job picks it up on its 30-minute run (the merge job can also be started by hand in Jenkins) and moves it to Dev Review Staging when deployed. The reviewer then reviews it on staging and moves it to QA Queue Staging."
+  },
+
+  "rca_clca": {
+    "fields": {"rca": "RCA", "clca": "CLCA"},
+    "max_length": 1024,
+    "placeholders": ["", "-NA-", "NA", "N/A", "Pending", "None", "TBD"]
+  },
+
+  "ticket_type_rules": {
+    "custom_field": "Category",
+    "defect_values": ["Bug"],
+    "cr_values": ["Change Request (CR)", "Requirement"],
+    "default_type": "CR",
+    "defect_tags": [],
+    "cr_tags": []
+  },
+
+  "deploy_attributes": {
+    "plan_level": 2,
+    "node_field": "Node",
+    "node_value": "",
+    "tag": "",
+    "needs_epic_parent": true
+  },
+
+  "followup": {
+    "status": "Backlog",
+    "module_field": "Module"
+  },
+
+  "db": {
+    "repo_path": "../../Launchpad - CMGMT-DB",
+    "node_value": "CMGMT-DB",
+    "base_branch": "master",
+    "sql_root": "Database/C2M",
+    "sql_folders": [],
+    "layout": "flat",
+    "branch_per_ticket": true,
+    "find_via_requirement": true,
+    "title_template": "Story: Database changes for "
+  },
+
+  "local_only_patterns": [
+    "(^|/)src/environments/environment(\\.development|\\.local)?\\.ts$",
+    "(^|/)appsettings\\.local\\.json$",
+    "(^|/)application-local\\.(yml|yaml|properties)$",
+    "(^|/)local_env\\.env$"
+  ],
+
+  "risk_check": {
+    "max_low_changed_lines": 150,
+    "high_path_patterns": [
+      "^SharedLibraries/",
+      "^Shared Libraries/",
+      "^CommonUtility/",
+      "^C2MUtility/",
+      "^payment-module/",
+      "^SessionMgmt/",
+      "^UserManagement/",
+      "encrypt|decrypt|crypto|vault|secret",
+      "(^|/)[^/]*(auth|sso|oauth|guard|interceptor|jwt|token)[^/]*$"
+    ],
+    "medium_path_patterns": [
+      "appsettings[^/]*\\.json$",
+      "(^|/)application[^/]*\\.(yml|yaml|properties)$",
+      "(^|/)pom\\.xml$",
+      "(^|/)package\\.json$",
+      "(^|/)Dockerfile$",
+      "\\.pubxml$",
+      "(^|/)environments?/"
+    ],
+    "afd3_persistence_path": "^$",
+    "canvas_path_patterns": [],
+    "canvas_cosmetic_extensions": [".scss", ".css", ".html"]
+  },
+
+  "metrics": {
+    "milestone_filter": "Release",
+    "baseline_milestones": 2,
+    "qa_status": "QA Queue Staging",
+    "reopen_statuses": ["Re-Open", "Dev in Process", "Dev Fix", "Dev Queue", "Triage"],
+    "failure_statuses": ["Merge Failed", "Build Failed"],
+    "missing_details_statuses": ["Req Questions"]
+  },
+
+  "epics": {
+    "node_value": "",
+    "candidates_shown": 10,
+    "cache_minutes": 60,
+    "inactive_statuses": ["Fixed or Prod Deployed", "Rejected", "Invalid", "Not Reproducible", "User Error",
+                          "Task Complete", "Fixed", "Production Verified", "TL Verified"]
+  },
+
+  "repos": {
+    "cmgmt": {
+      "folder": "../../Launchpad - CMGMT",
+      "remote_match": "plasma-portfolio/cmgmt.git",
+      "config": {
+        "repo_node": "CMGMT",
+        "quality": {"apps": {
+          "DeviceMgmtWebApp": {"sonar": {"project_key": "DeviceMgmtWebApp", "scanner": "cli", "sources": "src",
+                                         "exclusions": "**/assets/styles/images/**,**/assets/styles/fonts/**,**/assets/styles/docs/**,**/*.png,**/*.jpg,**/*.jpeg,**/*.gif,**/*.ico,**/*.webp,**/*.pdf,**/*.ttf,**/*.woff,**/*.woff2,**/*.eot"}},
+          "DeviceMgmtAPI": {"sonar": {"project_key": "DeviceMgmtAPI", "scanner": "dotnet", "build_target": "DeviceMgmtAPI.csproj"},
+                            "snyk": {"file": "obj/project.assets.json", "prepare": ["dotnet", "restore", "DeviceMgmtAPI.csproj"]}}}},
+        "deploy_attributes": {"node_value": "CMGMT"},
+        "epics": {"node_value": "CMGMT"},
+        "gates": {
+          "angular_projects": ["AIStudioWebApp", "DeviceAdminMgmtWebApp", "DeviceCertificationWebApp",
+                               "DeviceMgmtBetaWebApp", "DeviceMgmtWebApp"],
+          "source_roots": ["AIStudioAPI/", "AIStudioWebApp/", "C2MUtility/", "CatalogAPI/", "CatalogManagement/",
+                           "CommonUtility/", "DeviceAdminMgmtWebApp/", "DeviceCertificationAPI/",
+                           "DeviceCertificationWebApp/", "DeviceManagement/", "DeviceMgmtAPI/", "DeviceMgmtAPI.Tests/",
+                           "DeviceMgmtBetaWebApp/", "DeviceMgmtDomainAPI/", "DeviceMgmtWebApp/", "EventManagement/",
+                           "FAQManagement/", "GenAIManagement/", "OrderManagement/", "RenesasScheduler/", "SessionMgmt/",
+                           "SharedLibraries/", "TraceLog/", "TrafficMeter/", "UserManagement/",
+                           "last-value-tracker-lite/", "payment-module/", "sim-data-scheduler/"],
+          "legacy_prefixes": [],
+          "extra_extensions": [".java", ".xml", ".yml", ".yaml", ".properties"],
+          "maven": true
+        },
+        "functional_checks": {
+          "angular_roots": ["AIStudioWebApp/", "DeviceAdminMgmtWebApp/", "DeviceCertificationWebApp/",
+                            "DeviceMgmtBetaWebApp/", "DeviceMgmtWebApp/"],
+          "environment_ts": "DeviceMgmtWebApp/src/environments/environment.ts"
+        },
+        "ui_checks": {
+          "host_url": "http://localhost:4200",
+          "host_repo_path": "../../Launchpad - CMGMT",
+          "host_serve": "cd DeviceMgmtWebApp && ng serve",
+          "host_branch": "master",
+          "remote_url": "",
+          "remote_serve": ""
+        }
+      }
+    },
+    "mai-dc": {
+      "folder": "../../Launchpad - MAI-DC",
+      "remote_match": "plasma-portfolio/mai-dc.git",
+      "config": {
+        "repo_node": "MAI-DC",
+        "quality": {
+          "_apps_comment": "As each app's Jenkins job on jenkins-build-server-3 (2026-11-11): Sonar via Maven, except line-management-mfe (CLI scanner); launchpad-api runs the CLI scanner on its Maven build in Jenkins, the Maven plugin is the same scan locally. Snyk thresholds as the jobs: low, launchpad-api high, line-management-mfe medium. launchpad-admin-portal has no Sonar / Snyk; dashboard-provisioning-service has no job.",
+          "apps": {
+          "MultitenantDashboardGen": {"sonar": {"project_key": "MultitenantDashboardGen", "scanner": "maven"},
+                                      "snyk": {"file": "pom.xml", "severity_threshold": "low"}},
+          "asset-data-transformer": {"sonar": {"project_key": "asset-data-transformer", "scanner": "maven"},
+                                     "snyk": {"file": "pom.xml", "severity_threshold": "low"}},
+          "launchpad-api": {"sonar": {"project_key": "launchpad_api", "scanner": "maven"},
+                            "snyk": {"file": "pom.xml", "severity_threshold": "high"}},
+          "line-management-mfe": {"sonar": {"project_key": "line_management_mfe", "scanner": "cli", "sources": "src"},
+                                  "snyk": {"file": "package.json", "severity_threshold": "medium"}},
+          "line-management-service": {"sonar": {"project_key": "line-management-service", "scanner": "maven"},
+                                      "snyk": {"file": "pom.xml", "severity_threshold": "low"}},
+          "opc-comm": {"sonar": {"project_key": "opc-comm", "scanner": "maven"},
+                       "snyk": {"file": "pom.xml", "severity_threshold": "low"}},
+          "payment-module": {"sonar": {"project_key": "payment-module", "scanner": "maven"},
+                             "snyk": {"file": "pom.xml", "severity_threshold": "low"}},
+          "service_orchestrator": {"sonar": {"project_key": "service_orchestrator", "scanner": "maven"},
+                                   "snyk": {"file": "pom.xml", "severity_threshold": "low"}},
+          "timelineretrieval": {"sonar": {"project_key": "timelineretrieval", "scanner": "maven"},
+                                "snyk": {"file": "pom.xml", "severity_threshold": "low"}}}},
+        "deploy_attributes": {"node_value": "MAI-DC"},
+        "epics": {"node_value": "MAI-DC"},
+        "gates": {
+          "angular_projects": ["launchpad-admin-portal/frontend", "line-management-mfe"],
+          "source_roots": ["MultitenantDashboardGen/", "Shared Libraries/", "asset-data-transformer/",
+                           "dashboard-provisioning-service/", "launchpad-admin-portal/", "launchpad-api/",
+                           "line-management-mfe/", "line-management-service/", "opc-comm/", "payment-module/",
+                           "service_orchestrator/", "timelineretrieval/"],
+          "legacy_prefixes": [],
+          "extra_extensions": [".java", ".xml", ".yml", ".yaml", ".properties"],
+          "maven": true
+        },
+        "functional_checks": {
+          "angular_roots": ["launchpad-admin-portal/frontend/", "line-management-mfe/"],
+          "environment_ts": "line-management-mfe/src/environments/environment.ts"
+        },
+        "ui_checks": {
+          "host_url": "http://localhost:4200",
+          "host_repo_path": "../../Launchpad - MAI-DC",
+          "host_serve": "cd line-management-mfe && ng serve",
+          "host_branch": "master",
+          "remote_url": "",
+          "remote_serve": ""
+        }
+      }
+    }
+  }
+}

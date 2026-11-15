@@ -1,0 +1,8 @@
+{
+  "db": {
+    "repo_path": "C:/path/to/C2M_CI_DB"
+  },
+  "ui_checks": {
+    "host_repo_path": "C:/path/to/C2M_CommonServices/C2M_Console_Angular_Beta"
+  }
+}

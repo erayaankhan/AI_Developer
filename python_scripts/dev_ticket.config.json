@@ -1,0 +1,165 @@
+{
+  "project_root": "../..",
+  "base_branch": "master",
+  "branch_prefix": "FB_",
+
+  "statuses": {
+    "queue": "Dev Queue",
+    "in_process": "Dev In Process",
+    "code_review": "Code Review",
+    "missing_details": "Missing Implementation Details",
+    "done": "Dev Done",
+    "staging": "DevOps Staging"
+  },
+
+  "allowed_status_moves": [
+    ["Dev In Process", "Code Review"],
+    ["Dev In Process", "Missing Implementation Details"],
+    ["Missing Implementation Details", "Dev In Process"],
+    ["Dev In Process", "Dev Queue"],
+    ["Dev Queue", "Dev In Process"]
+  ],
+  "requested_status_moves": [
+    ["Code Review", "DevOps Staging"]
+  ],
+  "low_path_status_moves": [
+    ["Code Review", "Dev Done"],
+    ["Dev Done", "DevOps Staging"]
+  ],
+
+  "staging_deploy": {
+    "jenkins_base_url": "http://localhost:8080",
+    "job": "deploy_on_cloud_staging",
+    "timeout_minutes": 90,
+    "poll_seconds": 15,
+    "done_status": "QA Queue",
+    "merged_status": "Staging Code Merged",
+    "app_folders": ["C2MWebAPI", "c2mwf_admin", "c2mwf_runtime", "C2MWFAng", "wf_mediaurl_service",
+                    "wfapi_appdata_service", "wfapi_background_api_service", "wfapi_background_service",
+                    "wfapi_bm_service", "wfapi_gateway_service", "wfapi_wf_service"],
+    "failed_statuses": ["Merge Failed", "Build Failed"],
+    "build_timeout_minutes": 90
+  },
+
+  "roles": {"values": ["developer", "reviewer"], "env_key": "DEV_ROLE", "env_file": "AI_DEV_ENV/credentials.env"},
+  "reviewers": ["saleemk", "ankur_var", "ghanshyamy"],
+  "developers": ["manish_s", "harshits", "sahilp"],
+  "allow_self_review": false,
+  "quality": {"enabled": false, "_comment": "dt quality (Sonar / Snyk before hand-off) and dt quality-bounce; see quality.py. Apps go in the repo overlay: quality.apps {folder: {sonar: {project_key, scanner cli|dotnet, sources, exclusions, build_target}, snyk: {file, prepare}}}."},
+  "teams": {"enabled": false, "env_key": "TEAMS_WEBHOOK_URL", "emails": {}, "_comment": "Hand-off message to the reviewer on a Teams channel (teams_notify.py). The webhook URL lives in credentials.env under env_key; emails overrides the Assembla email used for the @mention."},
+  "review_stages": ["R1-pick", "R2-fetch", "R3-check", "R4-review", "R5-verdict", "R6-deploy", "done"],
+  "reviewer_status_moves": [
+    ["Code Review", "Dev Done"],
+    ["Code Review", "Dev Queue"],
+    ["Dev Done", "DevOps Staging"],
+    ["Dev Done", "Code Review"],
+    ["DevOps Staging", "Code Review"]
+  ],
+
+  "summary": {"max_lines_warn": 40, "max_lines_error": 70},
+
+  "rca_clca": {
+    "fields": {"rca": "RCA", "clca": "CLCA"},
+    "max_length": 1024,
+    "placeholders": ["", "-NA-", "NA", "N/A", "Pending", "None", "TBD"]
+  },
+
+  "tickets_dir": "DEV_TICKETS",
+  "ticket_types": ["CR", "DEFECT"],
+  "max_comments_in_snapshot": 40,
+
+  "ticket_type_rules": {
+    "custom_field": "Category",
+    "defect_values": ["Defect", "Bug"],
+    "cr_values": ["Change Request", "Story"],
+    "default_type": "CR",
+    "defect_tags": ["Defect", "Bug"],
+    "cr_tags": ["CR", "Change Request"]
+  },
+
+  "deploy_attributes": {
+    "plan_level": 2,
+    "node_field": "Node",
+    "node_value": "WF",
+    "tag": "WF",
+    "needs_epic_parent": true
+  },
+
+  "followup": {
+    "status": "New",
+    "module_field": "C2M-Module"
+  },
+
+  "db": {
+    "repo_path": "../../../C2M_CI_DB",
+    "node_value": "C2M-DB",
+    "base_branch": "master",
+    "sql_root": "Database/C2M/SP",
+    "sql_folders": ["SP", "Functions", "Tables", "DDL_DML"]
+  },
+
+  "local_only_patterns": [
+    "(^|/)src/environments/environment(\\.development|\\.local)?\\.ts$",
+    "(^|/)my_appsettings/",
+    "(^|/)local_env\\.env$"
+  ],
+
+  "ui_checks": {
+    "host_url": "http://localhost:4200",
+    "host_repo_path": "../../../C2M_CommonServices/C2M_Console_Angular_Beta",
+    "host_serve": "ng s",
+    "host_branch": "dev",
+    "remote_url": "http://localhost:4202",
+    "remote_serve": "cd c2mwf_admin && ng run listingcms:serve-federated"
+  },
+
+  "functional_checks": {
+    "angular_roots": ["c2mwf_admin/", "c2mwf_runtime/", "C2MWFAng/"],
+    "environment_ts": "c2mwf_admin/src/environments/environment.ts",
+    "local_env_file": "AI_DEV_ENV/local_env.env",
+    "test_data_prefix": "AI-CHECK-"
+  },
+
+  "risk_check": {
+    "max_low_changed_lines": 150,
+    "high_path_patterns": [
+      "^wfapi_gateway_service/",
+      "ocelot[^/]*\\.json$",
+      "^SharedLibraries_MicroServices/",
+      "^c2mwf_common_utilities/",
+      "encrypt|decrypt|crypto|vault|secret",
+      "(^|/)[^/]*(auth|guard|interceptor|jwt)[^/]*$"
+    ],
+    "medium_path_patterns": [
+      "appsettings[^/]*\\.json$",
+      "\\.pubxml$",
+      "(^|/)environments?/"
+    ],
+    "afd3_persistence_path": "^c2mwf_admin/src/app/ai-flow-builder3/",
+    "canvas_path_patterns": [
+      "^c2mwf_admin/src/app/admin/wf/wfd2/",
+      "^c2mwf_admin/src/app/ai-flow-builder3/"
+    ],
+    "canvas_cosmetic_extensions": [".scss", ".css", ".html"]
+  },
+
+  "metrics": {
+    "milestone_filter": "Workflow",
+    "baseline_milestones": 2,
+    "qa_status": "QA Queue",
+    "reopen_statuses": ["Re-Open", "Dev In Process", "Dev Fix", "Dev Queue", "Dev Triage"],
+    "failure_statuses": ["Merge Failed", "Build Failed"],
+    "missing_details_statuses": ["Missing Implementation Details", "Req Questions"]
+  },
+
+  "stages": ["1-pick", "2-check", "3-branch", "4-understand", "5-plan", "6-build", "7-verify",
+             "8-handoff", "done"],
+
+  "epics": {
+    "node_value": "WF",
+    "candidates_shown": 10,
+    "cache_minutes": 60,
+    "inactive_statuses": ["Closed", "Invalid", "Rejected", "Not Reproducible", "User Error",
+                          "Fixed or Prod-Deployed"]
+  }
+}

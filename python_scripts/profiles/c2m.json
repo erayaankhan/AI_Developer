@@ -1,0 +1,298 @@
+{
+  "profile_version": 1,
+  "_comment": "C2M CI team profile: every code repo of Assembla space c2m-ci (C2M - GenAI, C2M - IMW2, ...). They share the space, the original C2M status flow and DevOps' Code_Merge Jenkins job, so one workflow folder (AI_Developer_C2M) serves them all. What differs per repo (Node, milestones, reviewers, gates, risk paths, Teams channel) is in repos.<key>.config, picked by the repo's origin URL. Add a C2M repo = add an entry under repos. Skill notes: skills/dev-ticket/PROFILE_C2M.md, and PROFILE_C2M_<REPO>.md per repo.",
+  "assembla_space": "c2m-ci",
+  "current_milestones": [],
+  "pick_from_queue": true,
+  "project_root": "auto",
+  "base_branch": "master",
+  "branch_prefix": "FB_",
+  "reviewers": [],
+  "developers": [],
+  "allow_self_review": true,
+  "teams": {
+    "enabled": true,
+    "env_key": "TEAMS_WEBHOOK_URL_C2M"
+  },
+  "_roles_comment": "Per repo: everyone on that repo's team reviews and writes code (a login may be on only one list, so all are reviewers). allow_self_review: a reviewer may assign their own hand-off to themselves and review and deploy it.",
+  "staging_deploy": {
+    "enabled": true,
+    "adapter": "code_merge",
+    "job": "Code_Merge",
+    "_comment": "DevOps' Code_Merge job on JENKINS_REMOTE_BASE_URL (jenkins-build-server.c2minternal.com), shared by every C2M CI repo: no parameters, runs every 2 hours, takes ONE DevOps Staging ticket of the space per run. Then IT Support moves the ticket to QA Queue or Merge Failed / Build Failed.",
+    "done_status": "QA Queue",
+    "merged_status": "DevOps Staging",
+    "failed_statuses": [
+      "Merge Failed",
+      "Build Failed"
+    ],
+    "poll_seconds": 15,
+    "build_timeout_minutes": 30,
+    "app_folders": [
+      "GenAIService",
+      "EmbeddingService",
+      "connector-bridge",
+      "gen-ai-designer-service",
+      "gen-ai-designer-mfe",
+      "prompt-designer",
+      "judge0",
+      "c2m-api-gateway",
+      "icedata",
+      "druid_client_presto",
+      "druid-reindexer",
+      "bigdata_CRUD_utility",
+      "apm-chart"
+    ]
+  },
+  "ticket_type_rules": {
+    "custom_field": "Category",
+    "defect_values": [
+      "Bug",
+      "Defect"
+    ],
+    "cr_values": [
+      "Story",
+      "Task",
+      "Change Request (CR)",
+      "Change Request",
+      "New Change Request"
+    ],
+    "default_type": "CR",
+    "defect_tags": [
+      "Defect",
+      "Bug"
+    ],
+    "cr_tags": [
+      "CR",
+      "Change Request"
+    ]
+  },
+  "deploy_attributes": {
+    "plan_level": 2,
+    "node_field": "Node",
+    "node_value": "",
+    "tag": "",
+    "needs_epic_parent": true
+  },
+  "followup": {
+    "status": "New",
+    "module_field": "C2M-Module"
+  },
+  "db": {
+    "enabled": false
+  },
+  "local_only_patterns": [
+    "(^|/)src/environments/environment(\\.development|\\.local)?\\.ts$",
+    "(^|/)application-local\\.(yml|yaml|properties)$",
+    "(^|/)\\.env$",
+    "(^|/)local_env\\.env$"
+  ],
+  "risk_check": {
+    "max_low_changed_lines": 150,
+    "afd3_persistence_path": "^$",
+    "canvas_path_patterns": [],
+    "canvas_cosmetic_extensions": [
+      ".scss",
+      ".css",
+      ".html"
+    ],
+    "high_path_patterns": [],
+    "medium_path_patterns": []
+  },
+  "metrics": {
+    "milestone_filter": "",
+    "baseline_milestones": 2,
+    "qa_status": "QA Pending Preprod"
+  },
+  "epics": {
+    "node_value": "",
+    "candidates_shown": 10,
+    "cache_minutes": 60
+  },
+  "repos": {
+    "genai": {
+      "folder": "../../C2M - GenAI",
+      "remote_match": "plasma-portfolio/genai.git",
+      "config": {
+        "repo_node": "GenAI",
+        "current_milestones": [
+          "GenAI 1.23.0",
+          "GenAI 1.21.1",
+          "GenAI 1.21.2"
+        ],
+        "reviewers": [
+          "shamshadk",
+          "Igor-v",
+          "varadabhyankar"
+        ],
+        "teams": {
+          "env_key": "TEAMS_WEBHOOK_URL_GENAI"
+        },
+        "deploy_attributes": {
+          "node_value": "GenAI",
+          "tag": "GENAI"
+        },
+        "epics": {
+          "node_value": "GenAI"
+        },
+        "metrics": {
+          "milestone_filter": "GenAI"
+        },
+        "risk_check": {
+          "high_path_patterns": [
+            "^Libs/",
+            "^gen-ai-designer-service/service-security/",
+            "encrypt|decrypt|crypto|vault|secret",
+            "(^|/)[^/]*(auth|sso|oauth|guard|interceptor|jwt|token)[^/]*$"
+          ],
+          "medium_path_patterns": [
+            "(^|/)application[^/]*\\.(yml|yaml|properties)$",
+            "(^|/)pom\\.xml$",
+            "(^|/)package\\.json$",
+            "(^|/)pyproject\\.toml$",
+            "(^|/)requirements[^/]*\\.txt$",
+            "(^|/)Dockerfile$",
+            "(^|/)docker-compose[^/]*\\.ya?ml$",
+            "(^|/)config/",
+            "(^|/)prompts/",
+            "(^|/)environments?/"
+          ]
+        },
+        "gates": {
+          "angular_projects": [
+            "gen-ai-designer-mfe",
+            "prompt-designer"
+          ],
+          "source_roots": [
+            "EmbeddingService/",
+            "GenAIService/",
+            "Libs/",
+            "Tools/",
+            "connector-bridge/",
+            "gen-ai-designer-mfe/",
+            "gen-ai-designer-service/",
+            "judge0/",
+            "prompt-designer/",
+            "tests/"
+          ],
+          "legacy_prefixes": [],
+          "extra_extensions": [
+            ".py",
+            ".java",
+            ".xml",
+            ".yml",
+            ".yaml",
+            ".properties",
+            ".toml",
+            ".txt",
+            ".json"
+          ],
+          "maven": true,
+          "python": true
+        },
+        "functional_checks": {
+          "angular_roots": [
+            "gen-ai-designer-mfe/",
+            "prompt-designer/"
+          ],
+          "environment_ts": "gen-ai-designer-mfe/src/environments/environment.ts"
+        },
+        "ui_checks": {
+          "host_url": "http://localhost:4200",
+          "host_repo_path": "../../C2M - GenAI",
+          "host_serve": "cd gen-ai-designer-mfe && ng serve",
+          "host_branch": "master",
+          "remote_url": "",
+          "remote_serve": ""
+        }
+      }
+    },
+    "imw2": {
+      "folder": "../../C2M - IMW2",
+      "remote_match": "plasma-portfolio/c2mimw2.git",
+      "config": {
+        "repo_node": "IMW2",
+        "current_milestones": [
+          "BigData_3.1.0",
+          "Bigdata 2.1.4"
+        ],
+        "reviewers": [
+          "shamshadk",
+          "nikhilt",
+          "gaurav-k"
+        ],
+        "teams": {
+          "env_key": "TEAMS_WEBHOOK_URL_IMW2"
+        },
+        "deploy_attributes": {
+          "node_value": "IMW2",
+          "tag": "IMW2"
+        },
+        "epics": {
+          "node_value": "IMW2"
+        },
+        "metrics": {
+          "milestone_filter": "BigData"
+        },
+        "risk_check": {
+          "high_path_patterns": [
+            "encrypt|decrypt|crypto|cipher|vault|secret",
+            "(^|/)[^/]*(auth|sso|oauth|guard|interceptor|jwt|token|security|filter|ratelimit|rate-limit)[^/]*$",
+            "(^|/)[^/]*(sql|query|injection|sanitiz|validat)[^/]*\\.java$"
+          ],
+          "medium_path_patterns": [
+            "(^|/)config/",
+            "(^|/)application[^/]*\\.(yml|yaml|properties)$",
+            "(^|/)route[^/]*\\.json$",
+            "(^|/)pom\\.xml$",
+            "(^|/)package\\.json$",
+            "(^|/)Dockerfile$",
+            "(^|/)script/",
+            "(^|/)environments?/",
+            "^bigdata_CRUD_utility/src/main/resources/public/"
+          ]
+        },
+        "gates": {
+          "angular_projects": [
+            "apm-chart"
+          ],
+          "source_roots": [
+            "apm-chart/",
+            "bigdata_CRUD_utility/",
+            "c2m-api-gateway/",
+            "druid-reindexer/",
+            "druid_client_presto/",
+            "icedata/"
+          ],
+          "legacy_prefixes": [],
+          "extra_extensions": [
+            ".java",
+            ".xml",
+            ".yml",
+            ".yaml",
+            ".properties",
+            ".json",
+            ".sh",
+            ".txt"
+          ],
+          "maven": true,
+          "python": false
+        },
+        "functional_checks": {
+          "angular_roots": [
+            "apm-chart/"
+          ],
+          "environment_ts": "apm-chart/src/environments/environment.ts"
+        },
+        "ui_checks": {
+          "host_url": "http://localhost:4200",
+          "host_repo_path": "../../C2M - IMW2",
+          "host_serve": "cd apm-chart && ng serve",
+          "host_branch": "master",
+          "remote_url": "",
+          "remote_serve": ""
+        }
+      }
+    }
+  }
+}
